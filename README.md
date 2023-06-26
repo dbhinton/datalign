@@ -17,3 +17,4 @@ Simple web dev project that allows user to enter a single operand problem. The o
 - Open another terminal
 - Run `python backend_service.py`
 - In a web browser, go to http://localhost:5000 or http://127.0.0.1:5000/ to view the appliciation.
+- Test out with supported operators. (i.e 12*12, 12/12, 12+12, 12-12)
