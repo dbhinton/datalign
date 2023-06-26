@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Arithmetic Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      margin-bottom: 20px;
+    }
+    form {
+      margin-bottom: 20px;
+    }
+    input[type="text"] {
+      padding: 8px;
+      width: 200px;
+    }
+    button {
+      padding: 8px 16px;
+    }
+    #result {
+      font-size: 24px;
+      font-weight: bold;
+    }
+    #error {
+      font-weight: bold;
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <h1>Arithmetic Calculator</h1>
+  <form id="calculatorForm">
+    <input type="text" id="problemInput" placeholder="Enter arithmetic problem" required>
+    <button type="submit">Calculate</button>
+  </form>
+  <div id="result"></div>
+  <div id="error"></div>
+  <script>
+    const form = document.getElementById('calculatorForm');
+    const problemInput = document.getElementById('problemInput');
+    const resultDiv = document.getElementById('result');
+    const errorDiv = document.getElementById('error');
+
+    form.addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      const problem = problemInput.value;
+
+      // Make a POST request to the backend to calculate the result
+      fetch('/calculate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ problem })
+      })
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error('Error occurred during calculation');
+        }
+      })
+      .then(data => {
+        console.log(data)
+        if (data.error!==null) {
+          displayError(data.error);
+        } else {
+          displayResult(data.result);
+        }
+      })
+      .catch(error => {
+        displayError('An error occurred during calculation');
+      });
+    });
+
+    function displayResult(result) {
+      resultDiv.textContent = `Result: ${result}`;
+      errorDiv.textContent = '';
+      errorDiv.style.display = 'none';
+    }
+
+    function displayError(error) {
+      resultDiv.textContent = '';
+      errorDiv.textContent = `Error: ${error}`;
+      errorDiv.style.display = 'block';
+    }
+  </script>
+</body>
+</html>
